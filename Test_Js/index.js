@@ -5,7 +5,7 @@ object.time = new Date();
 object.data = [];
 
 const arr = [
-     "Co",
+    "Co",
     "Re",
     "Ce",
     "Fl",
@@ -39,17 +39,39 @@ removeElements(demo);
 for (let i = 0; i < rows.length; i++) {
     const tr = rows[i];
     let obj = {}
-    for (let j = 0; j < 4; j++) {
+    for (let j = 0; j < tr.cells.length; j++) {
         const td = tr.cells[j];
-        const value = td.innerText;
-            const valueToDot = value.replace(/(,|\.)/g,"");
-            obj[arr[j]] = valueToDot;
+        let value = td.innerText;
+        let lengthString = -1;
+        let multipleNumber = 1;
+        const checkNumber = parseInt(value);
+        if (!isNaN(checkNumber)) {
+            if (value.indexOf(",") === -1) {
+                multipleNumber = 1;
+                lengthString = 0;
+                if (value.indexOf(".") !== -1) {
+                    let splitString = value.split(".");
+                    lengthString = splitString[1].length;
+                } else {
+                    lengthString = value.length;
+                }
+
+                for (let k = 0; k < lengthString; k++) {
+                    multipleNumber *= 10;
+                }
+                value = Math.round(value * multipleNumber);
+            } else {
+                value = value.toString().replace(/(,)/g, "");
+            }
+        }
+        obj[arr[j]] = value.toString();
     }
     object.data.push(obj);
 }
 
 console.log(object.data);
-let oData = object.data;
-for(let d=0; d<oData.length;d++){
-    console.log("update table1 set Re="+oData[d]['Re']+", Ce="+oData[d]['Ce']+", Fl="+oData[d]['Fl']+" where Co='"+oData[d]['Co']+"'");
-}
+
+// let oData = object.data;
+// for (let d = 0; d < oData.length; d++) {
+//     console.log("update table1 set Re=" + oData[d]['Re'] + ", Ce=" + oData[d]['Ce'] + ", Fl=" + oData[d]['Fl'] + " where Co='" + oData[d]['Co'] + "'");
+// }
