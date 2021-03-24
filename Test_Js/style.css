@@ -128,9 +128,16 @@ ul {
     list-style: none;
 }
 
+table th {
+    text-align: center;
+    border: 1px solid rgb(168, 161, 161);
+    padding: 3px 8px;
+}
+
 table tr td {
     border: 1px solid rgb(168, 161, 161);
     text-align: right;
+    padding: 3px 8px;
 }
 
 table tr td:first-child {
@@ -139,7 +146,7 @@ table tr td:first-child {
 
 table thead {
     font-weight: 600;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 table {
@@ -152,22 +159,25 @@ table {
     border-collapse: collapse;
 }
 
+
+/* style các class để sử dụng cho việc tô màu trong các cell */
+
 .green-color {
-    color: green;
+    color: #00ff00;
 }
 
 .yellow-color {
-    color: yellow;
+    color: #f7ff31;
 }
 
 .purple-color {
-    color: purple;
+    color: #ff00ff;
 }
 
 .red-color {
-    color: red;
+    color: #ff000d;
 }
 
 .blue-color {
-    color: blue;
+    color: #66ccff;
 }

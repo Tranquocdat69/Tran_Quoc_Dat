@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="json.js"></script>
+    <script type="module" src="Json2UI.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
@@ -15,126 +15,41 @@
         <table border="1" id="table">
             <thead>
                 <tr>
-                    <td rowspan="2">Mã</td>
-                    <td rowspan="2">TC</td>
-                    <td rowspan="2">Trần</td>
-                    <td rowspan="2">Sàn</td>
-                    <td colspan="6">Mua</td>
-                    <td colspan="3">Khớp lệnh</td>
-                    <td colspan="6">Bán</td>
-                    <td rowspan="2">Tổng KL</td>
-                    <td rowspan="2">Mở cửa</td>
-                    <td rowspan="2">Cao nhất</td>
-                    <td rowspan="2">Thấp nhất</td>
-                    <td rowspan="2">NN mua</td>
-                    <td rowspan="2">NN bán</td>
+                    <th rowspan="2">Mã</th>
+                    <th rowspan="2">TC</th>
+                    <th rowspan="2">Trần</th>
+                    <th rowspan="2">Sàn</th>
+                    <th colspan="6">Mua</th>
+                    <th colspan="3">Khớp lệnh</th>
+                    <th colspan="6">Bán</th>
+                    <th rowspan="2">Tổng KL</th>
+                    <th rowspan="2" style="width: 40px;">Mở cửa</th>
+                    <th rowspan="2" style="width: 40px;">Cao nhất</th>
+                    <th rowspan="2" style="width: 40px;">Thấp nhất</th>
+                    <th rowspan="2">NN mua</th>
+                    <th rowspan="2">NN bán</th>
                 </tr>
                 <tr>
-                    <td>G3</td>
-                    <td>KL3</td>
-                    <td>G2</td>
-                    <td>KL2</td>
-                    <td>G1</td>
-                    <td>KL1</td>
-                    <td>Giá</td>
-                    <td>KL</td>
-                    <td>+/-</td>
-                    <td>G1</td>
-                    <td>KL1</td>
-                    <td>G2</td>
-                    <td>KL2</td>
-                    <td>G3</td>
-                    <td>KL3</td>
+                    <th>G3</th>
+                    <th>KL3</th>
+                    <th>G2</th>
+                    <th>KL2</th>
+                    <th>G1</th>
+                    <th>KL1</th>
+                    <th>Giá</th>
+                    <th>KL</th>
+                    <th>+/-</th>
+                    <th>G1</th>
+                    <th>KL1</th>
+                    <th>G2</th>
+                    <th>KL2</th>
+                    <th>G3</th>
+                    <th>KL3</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
-
 </body>
-<script>
-    const getTr = document.querySelectorAll("#table thead>tr td");
-    for (let g = 0; g < getTr.length; g++) {
-        const element = getTr[g];
-        element.style.textAlign = "center";
-        element.style.padding = "7px";
-
-    }
-    const table = document.getElementById("table")
-    for (let i = 0; i < dataTable.length; i++) {
-        var row = document.createElement("tr");
-        for (let j = 0; j < array.length; j++) {
-            var cell = document.createElement("td");
-            const value = dataTable[i][array[j]];
-            const value_Re = parseInt(dataTable[i][array[1]]);
-            const value_Ce = parseInt(dataTable[i][array[2]]);
-            const value_Fl = parseInt(dataTable[i][array[3]]);
-            cell.innerText = value;
-            if (array[j] === "Re" || array[j] === "Ce" || array[j] === "Fl") {
-                addClassToMainColumn(cell, array[j]);
-            }
-
-            if (value !== "") {
-                let valueToInt = parseInt(value);
-                if (array[j] === "BP3" || array[j] === "BP2" || array[j] === "BP1" || array[j] === "MP" || array[j] === "SP1" || array[j] === "SP2" || array[j] === "SP3" || array[j] === "Op" || array[j] === "Hi" || array[j] === "Lo") {
-                    if (valueToInt === value_Re) {
-                        addClass(cell, "yellow-color")
-                    } else if (valueToInt === value_Ce) {
-                        addClass(cell, "purple-color")
-                    } else if (valueToInt === value_Fl) {
-                        addClass(cell, "blue-color")
-                    } else {
-                        if (valueToInt > value_Re) {
-                            addClass(cell, "green-color");
-                        } else if (valueToInt < value_Re) {
-                            addClass(cell, "red-color");
-                        }
-                    }
-                }
-                let className = "";
-                if (array[j] === "BQ3" || array[j] === "BQ2" || array[j] === "BQ1" || array[j] === "MQ" || array[j] === "SQ1" || array[j] === "SQ2" || array[j] === "SQ3") {
-                    className = row.cells[j - 1].classList.value;
-                    if (className !== "") {
-                        addClass(cell, className);
-                    }
-                }
-                if (array[j] === "MC") {
-                    className = row.cells[j - 1].classList.value;
-                    if (className !== "") {
-                        addClass(cell, className);
-                    }
-                }
-
-                if (array[j] === "MQ") {
-                    className = row.cells[j - 1].classList.value;
-                    if (className !== "") {
-                        addClass(row.cells[0], className);
-                    }
-                }
-            }
-
-            row.appendChild(cell);
-        }
-        table.appendChild(row);
-    }
-
-    function addClass(obj, string) {
-        if (string !== "") {
-            return obj.classList.add(string);
-        }
-    }
-
-    function addClassToMainColumn(obj, string) {
-        if (string === "Re") {
-            return addClass(obj, "yellow-color")
-        }
-        if (string === "Ce") {
-            return addClass(obj, "purple-color")
-        }
-        if (string === "Fl") {
-            return addClass(obj, "blue-color")
-        }
-    }
-</script>
 
 </html>
