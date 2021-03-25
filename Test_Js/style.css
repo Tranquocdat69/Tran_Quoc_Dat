@@ -135,12 +135,12 @@ ul {
 
 table th {
     text-align: center;
-    border: 1px solid rgb(168, 161, 161);
+    border: 1px solid #858585 !important;
     padding: 7px;
 }
 
 table tr td {
-    border: 1px solid rgb(168, 161, 161);
+    border: 1px solid #505050;
     text-align: right;
     padding: 3px;
 }
