@@ -1,3 +1,5 @@
+/* reset CSS */
+
 *,
 :after,
 :before {
@@ -124,6 +126,9 @@ a {
     background: 0 0;
 }
 
+
+/* CSS table */
+
 ul {
     list-style: none;
 }
@@ -131,13 +136,13 @@ ul {
 table th {
     text-align: center;
     border: 1px solid rgb(168, 161, 161);
-    padding: 3px 8px;
+    padding: 7px;
 }
 
 table tr td {
     border: 1px solid rgb(168, 161, 161);
     text-align: right;
-    padding: 3px 8px;
+    padding: 3px;
 }
 
 table tr td:first-child {
@@ -146,7 +151,7 @@ table tr td:first-child {
 
 table thead {
     font-weight: 600;
-    font-size: 12px;
+    font-size: 10.66667px;
 }
 
 table {
@@ -180,4 +185,12 @@ table {
 
 .blue-color {
     color: #66ccff;
+}
+
+.bg-gray {
+    background-color: #444444;
+}
+
+.width-40 {
+    width: 40px;
 }

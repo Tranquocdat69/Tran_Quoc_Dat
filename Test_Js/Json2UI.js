@@ -1,5 +1,5 @@
     // ỉmport tất cả các biến chứa dữ liệu từ file ui2json.js
-    import * as Data from "./UI2Json.js";
+    import * as Data from "./data.js";
 
     // key của các cột khối lượng trong bảng
     let kl = [
@@ -66,6 +66,7 @@
         ["Lo"]
     ];
 
+    const cellBgGray = ["Re", "Ce", "Fl", "MP", "MQ", "MC", "TQ", "Op", "Hi", "Lo", "FB", "FS"];
     // lấy cả bảng có id là table
     const table = document.getElementById("table");
 
@@ -76,6 +77,9 @@
         for (let j = 0; j < array.length; j++) {
             var cell = document.createElement("td");
             const value = dataTable[i][array[j]];
+            if (cellBgGray.includes(array[j])) {
+                addClass(cell, "bg-gray");
+            }
             // lấy giá trị từ 3 cột tc, trần, sàn để so sánh
             const value_Re = parseFloat(dataTable[i]["Re"]);
             const value_Ce = parseFloat(dataTable[i]["Ce"]);
