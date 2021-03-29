@@ -80,8 +80,13 @@ namespace FilterAndSort.NETCore.Services.Implements
             //lấy tên folder và tên file output trong file appsettings.json
             string folder = _configuration["FolderOutput"];
             string name = _configuration["FileOutput"];
-            string path = folder + name;
-           //ghi tất cả các dòng trong list data sang đường dẫn path
+            //kiểm tra nếu đường dẫn folder trống thì tạo mới 1 folder tên là Output
+            if (folder == "")
+            {
+                folder = Directory.CreateDirectory("Output").ToString();
+            }
+            string path = folder + "\\" + name;
+            //ghi tất cả các dòng trong list data sang đường dẫn path
             File.WriteAllLines(path, data);
         }
 
