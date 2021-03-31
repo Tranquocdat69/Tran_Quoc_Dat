@@ -25,7 +25,6 @@ create table tSchedule(
 go
 
 insert into tStudents values('fitthuctap20',N'Trần Quốc Đạt','tranquocdataa@gmail.com',CURRENT_TIMESTAMP,null)
-insert into tSchedule values(2,'2021-03-15',1,CURRENT_TIMESTAMP,null)
 go
 
 --tạo index cho 3 cột aUsername(tStudents), aAttendedDate, aSession (tSchedule)
