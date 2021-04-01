@@ -192,15 +192,15 @@ create procedure spScheduleSelect
 @pUsername varchar(100) = null,
 --@from ngày bắt đầu
 --@to ngày kết thúc
-@pfrom date = null,
-@pto date = null,
+@pFrom date = null,
+@pTo date = null,
 --biến buổi để lọc
 @pSession int = null
 as
 set nocount on
 begin
 	select aScheduleID,schedule.aStudentID,students.aFullName,students.aEmail,aAttendedDate,aSession from tSchedule schedule
-	inner join tStudents students on students.aStudentID = schedule.aStudentID and (aUsername = @pUsername or (schedule.aAttendedDate between @pfrom and @pto) or aSession = @pSession)
+	inner join tStudents students on students.aStudentID = schedule.aStudentID and (aUsername = @pUsername or (schedule.aAttendedDate between @pFrom and @pTo) or aSession = @pSession)
 end
 go
 
