@@ -1,4 +1,10 @@
-﻿create database Training
+﻿use master
+go
+
+drop database Training
+go
+
+create database Training
 go
 
 use Training
