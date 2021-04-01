@@ -25,6 +25,11 @@ create table tSchedule(
 go
 
 insert into tStudents values('fitthuctap20',N'Trần Quốc Đạt','tranquocdataa@gmail.com',CURRENT_TIMESTAMP,null)
+insert into tStudents values('fitthuctap22',N'Lường Quang Trung','trunglq@gmail.com',CURRENT_TIMESTAMP,null)
+go
+
+insert into tSchedule values(1,'2021-3-15',1,CURRENT_TIMESTAMP,NULL)
+insert into tSchedule values(2,'2021-3-17',1,CURRENT_TIMESTAMP,NULL)
 go
 
 --tạo index cho 3 cột aUsername(tStudents), aAttendedDate, aSession (tSchedule)
@@ -71,19 +76,19 @@ if exists (select * from sys.objects where type = 'P' and name = 'spStudentUpdat
 drop procedure spStudentUpdate
 go
 create procedure spStudentUpdate 
-@aUsername varchar(100),
-@aFullName nvarchar(255),
-@aEmail varchar(100)
+@pUsername varchar(100),
+@pFullName nvarchar(255),
+@pEmail varchar(100)
 as 
 set nocount on
 begin
 		
-	if((select COUNT(aUsername) from tStudents where aUsername = @aUsername) > 0)
+	if((select COUNT(aUsername) from tStudents where aUsername = @pUsername) > 0)
 	begin
 		begin try
 			declare @aStudentID as int;
-			select @aStudentID = aStudentID from tStudents where aUsername = @aUsername
-			update tStudents set aUsername = @aUsername, aFullName = @aFullName,aEmail = @aEmail,aUpdatedDate = CURRENT_TIMESTAMP where aStudentID = @aStudentID
+			select @aStudentID = aStudentID from tStudents where aUsername = @pUsername
+			update tStudents set aUsername = @pUsername, aFullName = @pFullName,aEmail = @pEmail,aUpdatedDate = CURRENT_TIMESTAMP where aStudentID = @aStudentID
 		end try
 		begin catch
 			execute spErrorExecuteQuery
@@ -92,7 +97,7 @@ begin
 	else
 	begin 
 		begin try
-			insert into tStudents(aUsername,aFullName,aEmail,aCreatedDate,aUpdatedDate) values(@aUsername,@aFullName,@aEmail,CURRENT_TIMESTAMP,null) 
+			insert into tStudents(aUsername,aFullName,aEmail,aCreatedDate,aUpdatedDate) values(@pUsername,@pFullName,@pEmail,CURRENT_TIMESTAMP,null) 
 		end try
 		begin catch
 			execute spErrorExecuteQuery
@@ -106,16 +111,16 @@ if exists (select * from sys.objects where type = 'P' and name = 'spScheduleUpda
 drop procedure spScheduleUpdate
 go
 create procedure spScheduleUpdate
-@aStudentID int,
-@aAttendedDate date,
-@aSession int
+@pStudentID int,
+@pAttendedDate date,
+@pSession int
 as 
 set nocount on
 begin
-	if ((select COUNT(aScheduleID) from tSchedule where aStudentID = @aStudentID) > 0)
+	if ((select COUNT(aScheduleID) from tSchedule where aStudentID = @pStudentID) > 0)
 	 begin
 		begin try
-			update tSchedule set aAttendedDate = @aAttendedDate, aSession = @aSession,aUpdateDate = CURRENT_TIMESTAMP where aStudentID = @aStudentID
+			update tSchedule set aAttendedDate = @pAttendedDate, aSession = @pSession,aUpdateDate = CURRENT_TIMESTAMP where aStudentID = @pStudentID
 		end try
 		begin catch
 			execute spErrorExecuteQuery
@@ -124,7 +129,7 @@ begin
 	else
 	 begin
 		begin try
-			insert into tSchedule(aStudentID, aAttendedDate, aSession,aCreatedDate,aUpdateDate) values(@aStudentID,@aAttendedDate,@aSession,CURRENT_TIMESTAMP,null)
+			insert into tSchedule(aStudentID, aAttendedDate, aSession,aCreatedDate,aUpdateDate) values(@pStudentID,@pAttendedDate,@pSession,CURRENT_TIMESTAMP,null)
 		end try
 		begin catch
 			execute spErrorExecuteQuery
@@ -138,12 +143,12 @@ if exists (select * from sys.objects where type = 'P' and name = 'spStudentSelec
 drop procedure spStudentSelect
 go
 create procedure spStudentSelect
-@aUsername varchar(100) = null,
-@aEmail varchar(100) = null,
-@aFullName nvarchar(255) = null
+@pUsername varchar(100) = null,
+@pEmail varchar(100) = null,
+@pFullName nvarchar(255) = null
 as
 begin
-	select aStudentID,aUsername,aFullName,aEmail from tStudents where aUsername = @aUsername or aEmail = @aEmail or aFullName = @aFullName
+	select aStudentID,aUsername,aFullName,aEmail from tStudents where aUsername = @pUsername or aEmail = @pEmail or aFullName = @pFullName
 end
 go
 
@@ -152,14 +157,14 @@ if exists (select * from sys.objects where type = 'P' and name = 'spStudentDelet
 drop procedure spStudentDelete 
 go
 create procedure spStudentDelete 
-@aStudentID int
+@pStudentID int
 as
 set nocount on
 begin
-if((select count(aStudentID) from tStudents where aStudentID = @aStudentID) > 0)
+if((select count(aStudentID) from tStudents where aStudentID = @pStudentID) > 0)
 begin
 	begin try
-		delete from tStudents where aStudentID = @aStudentID
+		delete from tStudents where aStudentID = @pStudentID
 	end try
 	begin catch
 		execute spErrorExecuteQuery
@@ -178,18 +183,18 @@ drop procedure spScheduleSelect
 go
 create procedure spScheduleSelect
 --tên người dùng để lọc
-@aUsername varchar(100) = null,
+@pUsername varchar(100) = null,
 --@from ngày bắt đầu
 --@to ngày kết thúc
-@from date = null,
-@to date = null,
+@pfrom date = null,
+@pto date = null,
 --biến buổi để lọc
-@aSession int = null
+@pSession int = null
 as
 set nocount on
 begin
 	select aScheduleID,schedule.aStudentID,students.aFullName,students.aEmail,aAttendedDate,aSession from tSchedule schedule
-	inner join tStudents students on students.aStudentID = schedule.aStudentID and (aUsername = @aUsername or (schedule.aAttendedDate between @from and @to) or aSession = @aSession)
+	inner join tStudents students on students.aStudentID = schedule.aStudentID and (aUsername = @pUsername or (schedule.aAttendedDate between @pfrom and @pto) or aSession = @pSession)
 end
 go
 
@@ -198,14 +203,14 @@ if exists (select * from sys.objects where type = 'P' and name = 'spScheduleDele
 drop procedure spScheduleDelete 
 go
 create procedure spScheduleDelete 
-@aScheduleID int
+@pScheduleID int
 as
 set nocount on
 begin
-if((select COUNT(aScheduleID) from tSchedule where aScheduleID = @aScheduleID) > 0)
+if((select COUNT(aScheduleID) from tSchedule where aScheduleID = @pScheduleID) > 0)
 	begin
 		begin try
-			delete from tSchedule where aScheduleID = @aScheduleID
+			delete from tSchedule where aScheduleID = @pScheduleID
 		end try
 		begin catch
 			execute spErrorExecuteQuery
@@ -220,45 +225,47 @@ go
 
 
 --thực thi thủ tục spStudentUpdate
--- @aUsername varchar(100)
--- @aFullName nvarchar(255)
--- @aEmail varchar(100)
-execute spStudentUpdate 'fitthuctap21',N'Tran Hong Ngoc','ngoc@gmail.com'
+-- @pUsername varchar(100)
+-- @pFullName nvarchar(255)
+-- @pEmail varchar(100)
+execute spStudentUpdate 'fitthuctap21',N'Trần Hồng Ngọc','ngocth@gmail.com'
 go
 select * from tStudents 
 go
 
 --thực thi thủ tục spScheduleUpdate
--- @aStudentID int
--- @aAttendedDate date
--- @aSession int
-execute spScheduleUpdate 11,'2021-3-11',2
+-- @pStudentID int
+-- @pAttendedDate date
+-- @pSession int
+execute spScheduleUpdate 3,'2021-3-17',2
 go
 select * from tSchedule
 go
 
 --thực thi thủ tục spStudentSelect
--- @aUsername varchar(100) 
--- @aFullName nvarchar(255)
--- @aEmail varchar(100) 
-execute spStudentSelect @aFullName = N'Trần Quốc Đạt'
+-- @pUsername varchar(100) 
+-- @pFullName nvarchar(255)
+-- @pEmail varchar(100) 
+execute spStudentSelect @pFullName = N'Trần Quốc Đạt'
 go
 
 --thực thi thủ tục spStudentDelete
--- @aStudentID int
+-- @pStudentID int
 execute spStudentDelete 11
 go
 select * from tStudents
 go
 
 --thực thi thủ tục spScheduleSelect
--- @aUsername varchar(100)
--- @from date, @to date
--- @aSession int
-execute spScheduleSelect @aSession = 1
+-- @pUsername varchar(100)
+-- @pfrom date, @to date
+-- @paSession int
+execute spScheduleSelect @pSession = 2
 go
 
 --thực thi thủ tục spScheduleDelete
--- @aScheduleID int
+-- @pScheduleID int
 execute spScheduleDelete 19
+go
+select * from tStudents
 go
