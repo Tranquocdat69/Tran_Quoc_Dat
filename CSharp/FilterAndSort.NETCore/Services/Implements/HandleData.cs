@@ -31,25 +31,40 @@ namespace FilterAndSort.NETCore.Services.Implements
             return listFilter;
         }
         //regular expression để lấy tag = 52 và value của tag 52
-        string regex = @"52=\d{8}\s+\d{1,2}:\d{1,2}:\d{1,2}[.\d]+";
+        string regex_52 = @"52=\d{8}\s+\d{1,2}:\d{1,2}:\d{1,2}[.\d]+";
+        string regex_34 = @"34=\d+";
         private int Comparer(string line1, string line2)
         {
             //lấy ra chuỗi khớp với regular expression
-            string tag52_1 = Regex.Match(line1, regex).ToString();
-            string tag52_2 = Regex.Match(line2, regex).ToString();
+            string tag52_1 = Regex.Match(line1, regex_52).ToString();
+            string tag52_2 = Regex.Match(line2, regex_52).ToString();
             //biến đổi thời gian sang giây
             double second_1 = ConvertDateTimeToSecond(tag52_1);
             double second_2 = ConvertDateTimeToSecond(tag52_2);
             //so sánh thời gian (giây) giữa các dòng để sắp xếp
-            if (second_1 > second_2)
-            {
-                return 1;
-            }
-            else if (second_2 > second_1)
+            if (second_1 < second_2)
             {
                 return -1;
             }
+            else if (second_1 == second_2)
+            {
+                string tag34_1 = Regex.Match(line1, regex_34).ToString();
+                string tag34_2 = Regex.Match(line2, regex_34).ToString();
+
+                int value34_1 = int.Parse(tag34_1.Split("=")[1]);
+                int value34_2 = int.Parse(tag34_2.Split("=")[1]);
+                if (value34_1 < value34_2)
+                {
+                    return -1;
+                }else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
                 return 0;
+            }
         }
         public List<string> Sort(List<string> data)
         {
@@ -83,7 +98,15 @@ namespace FilterAndSort.NETCore.Services.Implements
             //kiểm tra nếu đường dẫn folder trống thì tạo mới 1 folder tên là Output
             if (folder == "")
             {
-                folder = Directory.CreateDirectory("Output").ToString();
+                folder = Directory.CreateDirectory("D:\\temp2\\MDDS_DATA\\ALL_OUTPUT_DAT").ToString();
+            }
+            else
+            {
+                //nếu FolderOutput khác rỗng thì kiểm tra nếu chưa tồn tại đường dẫn folder thì tạo mới 
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
             }
             string path = folder + "\\" + name;
             //ghi tất cả các dòng trong list data sang đường dẫn path
