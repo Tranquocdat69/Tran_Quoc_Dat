@@ -28,6 +28,7 @@ namespace FilterAndSort.NETCore
                 services.AddSingleton<IGetData,GetData>();
                 services.AddSingleton<IHandleData, HandleData>();
                 services.AddSingleton<IRun, Run>();
+                services.AddSingleton<ILogFile, LogFile>();
                 //NLog.LogManager.Configuration = new NLogLoggingConfiguration(context.Configuration.GetSection("NLog"));
             }).Build();
             //khởi tạo instance Run để chạy chương trình và truyền vào params là những services đã khai báo
