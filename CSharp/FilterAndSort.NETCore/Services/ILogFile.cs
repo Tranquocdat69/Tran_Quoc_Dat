@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FilterAndSort.NETCore.Services.Implements
 {
-    interface ILogFile
+    public interface ILogFile
     {
         public void LogErrorExceptionParameter<T>(Exception ex, string param, T value);
 

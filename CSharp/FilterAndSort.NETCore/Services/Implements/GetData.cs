@@ -8,40 +8,43 @@ using System.Text;
 
 namespace FilterAndSort.NETCore.Services.Implements
 {
-    class GetData : IGetData
+    public class GetData : IGetData
     {
         private readonly ILogFile _logException;
         private readonly ILogger<GetData> _logger;
-
         //IConfiguration dùng lấy dữ liệu trong file appsettings.json
-        IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
+        private string _pathFolder = "";
+
         public GetData(IConfiguration configuration, ILogFile logException, ILogger<GetData> logger)
         {
             _configuration = configuration;
             _logException = logException;
             _logger = logger;
+            _pathFolder = _configuration["Folder"];
         }
-        public List<string> getAllDirectoryNames()
+        public List<string> getAllDirectoryNames(string pathFolder)
         {
             List<string> list = new List<string>();
             //lấy trong file appsettings.json có key là folder để lấy các đường dẫn file
-            string pathFolder = _configuration["Folder"];
             try
             {
                 list = Directory.GetFiles(pathFolder).ToList();
             }
             catch (ArgumentNullException ane)
             {
-                  _logException.LogErrorExceptionParameter(ane, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
+                _logException.LogErrorExceptionParameter(ane, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
             }
-            catch(UnauthorizedAccessException uae)
+            catch (UnauthorizedAccessException uae)
             {
                 _logException.LogErrorExceptionParameter(uae, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
-            }catch(DirectoryNotFoundException dnf)
+            }
+            catch (DirectoryNotFoundException dnf)
             {
                 _logException.LogErrorExceptionParameter(dnf, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
 
-            }catch (IOException ioe)
+            }
+            catch (IOException ioe)
             {
                 _logException.LogErrorExceptionParameter(ioe, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
 
@@ -53,7 +56,7 @@ namespace FilterAndSort.NETCore.Services.Implements
         {
             List<string> allLines = new List<string>();
             //lấy các đường dẫn
-            List<string> listDirs = getAllDirectoryNames();
+            List<string> listDirs = getAllDirectoryNames(_pathFolder);
             foreach(var dir in listDirs)
             {
                 //dùng function readFiles để đọc lần lượt dữ liệu từ các file

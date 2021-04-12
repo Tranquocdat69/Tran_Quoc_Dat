@@ -7,7 +7,7 @@ namespace FilterAndSort.NETCore.Services
     public interface IGetData
     {
         //lấy ra các files trong thư mục
-        List<string> getAllDirectoryNames();
+        List<string> getAllDirectoryNames(string pathFolder);
         //đọc từng file 1 để lấy ra các dòng trong file
         List<string> readFiles(string path);
         //gộp lấy tất cả các dòng trong các files

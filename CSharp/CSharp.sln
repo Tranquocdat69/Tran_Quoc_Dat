@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilterAndSort.NETCore", "FilterAndSort.NETCore\FilterAndSort.NETCore.csproj", "{6D329DBD-087D-443E-B286-E42AB1FFD9C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterAndSort.NETCore", "FilterAndSort.NETCore\FilterAndSort.NETCore.csproj", "{6D329DBD-087D-443E-B286-E42AB1FFD9C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterAndSortUnitTest", "FilterAndSortUnitTestProject1\FilterAndSortUnitTest.csproj", "{83778F8E-EF50-4058-9EF0-4046092E8FAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{6D329DBD-087D-443E-B286-E42AB1FFD9C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D329DBD-087D-443E-B286-E42AB1FFD9C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D329DBD-087D-443E-B286-E42AB1FFD9C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83778F8E-EF50-4058-9EF0-4046092E8FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83778F8E-EF50-4058-9EF0-4046092E8FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83778F8E-EF50-4058-9EF0-4046092E8FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83778F8E-EF50-4058-9EF0-4046092E8FAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

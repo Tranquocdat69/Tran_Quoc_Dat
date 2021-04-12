@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace FilterAndSort.NETCore.Services.Implements
 {
-    class HandleData : IHandleData
+    public class HandleData : IHandleData
     {
         private readonly ILogFile _logException;
 
@@ -46,6 +46,7 @@ namespace FilterAndSort.NETCore.Services.Implements
             }
             return listFilter;
         }
+
         //regular expression để lấy tag = 52 và value của tag 52
         string regex_52 = @"52=\d{8}\s+\d{1,2}:\d{1,2}:\d{1,2}[.\d]+";
         string regex_34 = @"34=\d+";
@@ -141,7 +142,7 @@ namespace FilterAndSort.NETCore.Services.Implements
         }
 
         //biến đổi value của tag 52 sang dạng giây để so sánh
-        private double ConvertDateTimeToSecond(string dateTimeString)
+        public double ConvertDateTimeToSecond(string dateTimeString)
         {
             //tách tag 52 và value thành 1 array
             string[] splitString = dateTimeString.Split("=");

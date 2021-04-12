@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FilterAndSort.NETCore.Services.Implements
 {
-    class LogFile : ILogFile
+    public class LogFile : ILogFile
     {
         private readonly ILogger<LogFile> _logger; 
         public LogFile(ILogger<LogFile> logger)
