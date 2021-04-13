@@ -25,8 +25,8 @@ namespace FilterAndSort.NETCore.Services.Implements
         public void LogInformation(DateTime startTime)
         {
             DateTime endTime = DateTime.Now;
-            _logger.LogInformation("begin=" + startTime.ToString("yyyy-mm-dd HH:mm:ss.fff"));
-            _logger.LogInformation("end=" + endTime.ToString("yyyy-mm-dd HH:mm:ss.fff"));
+            _logger.LogInformation("begin=" + startTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+            _logger.LogInformation("end=" + endTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
             //tổng thời gian (ms) chạy chương trình = endTime - startEnd
             double totalMilliseconds = endTime.Subtract(startTime).TotalMilliseconds;
             _logger.LogInformation("ElapsedMilliseconds = {totalMilliseconds}", totalMilliseconds);

@@ -35,6 +35,10 @@ namespace FilterAndSort.NETCore.Services.Implements
                     foreach (var item in keyFilter)
                     {
                         check = d.Contains(item);
+                        if (check == false)
+                        {
+                            break;
+                        }
                     }
                 }
                 catch (ArgumentNullException ane)
