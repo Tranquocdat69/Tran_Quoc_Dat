@@ -23,7 +23,8 @@ namespace FilterAndSort.NETCore.Services.Implements
         public List<string> Filter(List<string> data)
         {
             //lấy key là filter trong appsettings.json
-            string keyFilter = _configuration["Filter"];
+            var keyFilter = _configuration.GetSection("Filter").Get<string[]>();
+
             List<string> listFilter = new List<string>();
             foreach (var d in data) 
             {
@@ -31,11 +32,14 @@ namespace FilterAndSort.NETCore.Services.Implements
                 var check = false;
                 try
                 {
-                    check = d.Contains(keyFilter);
+                    foreach (var item in keyFilter)
+                    {
+                        check = d.Contains(item);
+                    }
                 }
                 catch (ArgumentNullException ane)
                 {
-                    _logException.LogErrorExceptionParameter(ane, nameof(keyFilter), keyFilter == null ? "NULL" : "");
+                    _logException.LogErrorExceptionParameter(ane, nameof(keyFilter), "NULL");
                     break;
                 }
 
@@ -52,6 +56,7 @@ namespace FilterAndSort.NETCore.Services.Implements
         string regex_34 = @"34=\d+";
         private int Comparer(string line1, string line2)
         {
+            DateTime now = DateTime.Now;
             string tag52_1 = "";
             string tag52_2 = "";
 
@@ -65,12 +70,12 @@ namespace FilterAndSort.NETCore.Services.Implements
                 catch (ArgumentNullException ane)
                 {
                     _logException.LogErrorExceptionParameter(ane, nameof(regex_52), (regex_52 == null || regex_52 == "") ? "NULL" : "");
-                    _logException.LogInformation();
+                    _logException.LogInformation(now);
                     Environment.Exit(0);
                 }catch (RegexMatchTimeoutException rmte)
                 {
                     _logException.LogErrorExceptionParameter(rmte, nameof(regex_52), (regex_52 == null || regex_52 == "") ? "NULL" : regex_52);
-                    _logException.LogInformation();
+                    _logException.LogInformation(now);
                     Environment.Exit(0);
                 }
             }
@@ -109,13 +114,13 @@ namespace FilterAndSort.NETCore.Services.Implements
                 catch (ArgumentNullException ane)
                 {
                     _logException.LogErrorExceptionParameter(ane, nameof(regex_34), (regex_34 == null || regex_34 == "") ? "NULL" : "");
-                    _logException.LogInformation();
+                    _logException.LogInformation(now);
                     Environment.Exit(0);
                 }
                 catch (RegexMatchTimeoutException rmte)
                 {
                     _logException.LogErrorExceptionParameter(rmte, nameof(regex_34), (regex_34 == null || regex_34 == "") ? "NULL" : regex_34);
-                    _logException.LogInformation();
+                    _logException.LogInformation(now);
                     Environment.Exit(0);
                 }
 

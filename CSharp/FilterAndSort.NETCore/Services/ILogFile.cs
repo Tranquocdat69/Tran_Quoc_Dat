@@ -8,6 +8,6 @@ namespace FilterAndSort.NETCore.Services.Implements
     {
         public void LogErrorExceptionParameter<T>(Exception ex, string param, T value);
 
-        public void LogInformation();
+        public void LogInformation(DateTime startTime);
     }
 }
