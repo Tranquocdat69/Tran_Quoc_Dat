@@ -23,7 +23,7 @@ namespace FilterAndSort.NETCore.Services.Implements
             _logger = logger;
             _pathFolder = _configuration["Folder"];
         }
-        public List<string> getAllDirectoryNames(string pathFolder)
+        public List<string> GetAllDirectoryNames(string pathFolder)
         {
             List<string> list = new List<string>();
             //lấy trong file appsettings.json có key là folder để lấy các đường dẫn file
@@ -31,36 +31,22 @@ namespace FilterAndSort.NETCore.Services.Implements
             {
                 list = Directory.GetFiles(pathFolder).ToList();
             }
-            catch (ArgumentNullException ane)
+            catch (Exception ex)
             {
-                _logException.LogErrorExceptionParameter(ane, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
-            }
-            catch (UnauthorizedAccessException uae)
-            {
-                _logException.LogErrorExceptionParameter(uae, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
-            }
-            catch (DirectoryNotFoundException dnf)
-            {
-                _logException.LogErrorExceptionParameter(dnf, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
-
-            }
-            catch (IOException ioe)
-            {
-                _logException.LogErrorExceptionParameter(ioe, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
-
+                _logException.LogErrorExceptionParameter(ex, nameof(pathFolder), pathFolder == null ? "NULL" : pathFolder);
             }
             return list;
         }
 
-        public List<string> getAllLines()
+        public List<string> GetAllLines()
         {
             List<string> allLines = new List<string>();
             //lấy các đường dẫn
-            List<string> listDirs = getAllDirectoryNames(_pathFolder);
+            List<string> listDirs = GetAllDirectoryNames(_pathFolder);
             foreach(var dir in listDirs)
             {
                 //dùng function readFiles để đọc lần lượt dữ liệu từ các file
-                List<string> listLines = readFiles(dir);
+                List<string> listLines = ReadFiles(dir);
                 if (listLines.Count == 0)
                 {
                     break;
@@ -79,7 +65,7 @@ namespace FilterAndSort.NETCore.Services.Implements
             return allLines;
         }
 
-        public List<string> readFiles(string path)
+        public List<string> ReadFiles(string path)
         {
             List<string> list = new List<string>();
             //đọc các dòng trong file và add vào list
@@ -96,29 +82,19 @@ namespace FilterAndSort.NETCore.Services.Implements
                         list.Add(line);
                     }
                 }
-                catch (OutOfMemoryException oome)
+                catch (OutOfMemoryException ex)
                 {
-
-                    _logException.LogErrorExceptionParameter(oome,"","");
-                }
-                catch (IOException ioe)
-                {
-
-                    _logException.LogErrorExceptionParameter(ioe, "","");
+                    _logException.LogErrorExceptionParameter(ex,"","");
                 }
 
             }
-            catch (ArgumentNullException ane)
+            catch (ArgumentNullException ex)
             {
-                _logException.LogErrorExceptionParameter(ane, nameof(path), path == null ? "NULL" : path);
+                _logException.LogErrorExceptionParameter(ex, nameof(path), path == null ? "NULL" : path);
             }
-            catch(FileNotFoundException fnfe)
+            catch (FileNotFoundException ex)
             {
-                _logException.LogErrorExceptionParameter(fnfe, nameof(path), path == null ? "NULL" : path);
-            }
-            catch (IOException ioe)
-            {
-                _logException.LogErrorExceptionParameter(ioe, nameof(path), path == null ? "NULL" : path);
+                _logException.LogErrorExceptionParameter(ex, nameof(path), path == null ? "NULL" : path);
             }
 
             return list;

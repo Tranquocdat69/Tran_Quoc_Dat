@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -11,7 +12,6 @@ namespace FilterAndSort.NETCore.Services.Implements
     public class HandleData : IHandleData
     {
         private readonly ILogFile _logException;
-
 
         //đọc dữ liệu từ file appsettings.json
         IConfiguration _configuration;
@@ -23,7 +23,7 @@ namespace FilterAndSort.NETCore.Services.Implements
         public List<string> Filter(List<string> data)
         {
             //lấy key là filter trong appsettings.json
-            var keyFilter = _configuration.GetSection("Filter").Get<string[]>();
+            var keyFilters = _configuration.GetSection("Filter").Get<string[]>();
 
             List<string> listFilter = new List<string>();
             foreach (var d in data) 
@@ -32,9 +32,10 @@ namespace FilterAndSort.NETCore.Services.Implements
                 var check = false;
                 try
                 {
-                    foreach (var item in keyFilter)
+                    foreach (var item in keyFilters)
                     {
-                        check = d.Contains(item);
+                        var match = Regex.Match(d, item +  "\\w*").ToString();
+                        check = (match == item);
                         if (check == false)
                         {
                             break;
@@ -43,7 +44,7 @@ namespace FilterAndSort.NETCore.Services.Implements
                 }
                 catch (ArgumentNullException ane)
                 {
-                    _logException.LogErrorExceptionParameter(ane, nameof(keyFilter), "NULL");
+                    _logException.LogErrorExceptionParameter(ane, nameof(keyFilters), "NULL");
                     break;
                 }
 
@@ -180,21 +181,13 @@ namespace FilterAndSort.NETCore.Services.Implements
                 {
                     folder = Directory.CreateDirectory("D:\\temp2\\MDDS_DATA\\ALL_OUTPUT_DAT").ToString();
                 }
-                catch (ArgumentNullException ane)
+                catch (UnauthorizedAccessException ex)
                 {
-                    _logException.LogErrorExceptionParameter(ane, nameof(folder), (folder == null || folder == "") ? "NULL" : folder);
+                    _logException.LogErrorExceptionParameter(ex, nameof(folder), (folder == null || folder == "") ? "NULL" : folder);
                 }
-                catch (UnauthorizedAccessException uae)
+                catch (ArgumentNullException ex)
                 {
-                    _logException.LogErrorExceptionParameter(uae, nameof(folder), (folder == null || folder == "") ? "NULL" : folder);
-                }
-                catch (PathTooLongException ple)
-                {
-                    _logException.LogErrorExceptionParameter(ple, nameof(folder), folder);
-                }
-                catch (IOException ioe)
-                {
-                    _logException.LogErrorExceptionParameter(ioe, nameof(folder), (folder == null || folder == "") ? "NULL" : folder);
+                    _logException.LogErrorExceptionParameter(ex, nameof(folder), (folder == null || folder == "") ? "NULL" : folder);
                 }
             }
             else
@@ -205,20 +198,16 @@ namespace FilterAndSort.NETCore.Services.Implements
                     try
                     {
                         Directory.CreateDirectory(folder);
-
                     }
-                    catch (UnauthorizedAccessException uae)
+                    catch (UnauthorizedAccessException ex)
                     {
-                        _logException.LogErrorExceptionParameter(uae, nameof(folder), folder);
+                        _logException.LogErrorExceptionParameter(ex, nameof(folder), folder);
                     }
-                    catch (PathTooLongException ple)
+                    catch (ArgumentNullException ex)
                     {
-                        _logException.LogErrorExceptionParameter(ple, nameof(folder), folder);
+                        _logException.LogErrorExceptionParameter(ex, nameof(folder), folder);
                     }
-                    catch (IOException ioe)
-                    {
-                        _logException.LogErrorExceptionParameter(ioe, nameof(folder), folder);
-                    }
+                    
                 }
             }
             string path = folder + "\\" + name;
@@ -227,17 +216,9 @@ namespace FilterAndSort.NETCore.Services.Implements
             {
                 File.WriteAllLines(path, data);
             }
-            catch (ArgumentNullException ane)
+            catch (ArgumentNullException ex)
             {
-                _logException.LogErrorExceptionParameter(ane, nameof(path), (path == null || path == "") ? "NULL" : "");
-            }
-            catch (DirectoryNotFoundException dne)
-            {
-                _logException.LogErrorExceptionParameter(dne, nameof(path), path);
-            }
-            catch (UnauthorizedAccessException uae)
-            {
-                _logException.LogErrorExceptionParameter(uae, nameof(path), path);
+                _logException.LogErrorExceptionParameter(ex, nameof(path), (path == null || path == "") ? "NULL" : path);
             }
         }
 
