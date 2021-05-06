@@ -10,8 +10,9 @@ namespace InternManagementAPI.Repository
     {
         List<TSchedule> GetAllSchedules();
         TSchedule GetScheduleById(int id);
-        void AddSchedule(TSchedule entity);
-        void UpdateSchedule(TSchedule entity);
-        void DeleteSchedule(TSchedule entity);
+        List<TSchedule> GetScheduleByUsername(string username);
+        bool UpsertSchedule(TSchedule entity);
+        bool UpdateSchedule(int id, TSchedule entity);
+        void DeleteSchedule(int id);
     }
 }

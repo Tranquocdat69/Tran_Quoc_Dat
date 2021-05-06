@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
@@ -13,7 +14,9 @@ namespace InternManagementAPI.Models
         public int? AStudentId { get; set; }
         public DateTime? AAttendedDate { get; set; }
         public int? ASession { get; set; }
+        [JsonIgnore]
         public DateTime? ACreatedDate { get; set; }
+        [JsonIgnore]
         public DateTime? AUpdateDate { get; set; }
 
         public virtual TStudents AStudent { get; set; }

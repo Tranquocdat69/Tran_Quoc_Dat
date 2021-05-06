@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div id="studentIndex" class="container">
+    <div>
+        <h2 class="text-center">Internship Management</h2>
+        <br />
+    </div>
+</div>
+ 
+<!-- Modal -->
+<div class="modal fade" id="modalCreateStudent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add new internship</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="usernameStudent" class="control-label">Username:</label>
+                        <input type="text" class="form-control" id="usernameStudent">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullnameStudent" class="control-label">Fullname:</label>
+                        <input type="text" class="form-control" id="fullnameStudent">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailStudent" class="control-label">Email:</label>
+                        <input type="text" class="form-control" id="emailStudent">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" onclick="resetForm()" id="closeCreateStudentModal" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSubmitAddStudent" class="btn btn-success">Add New</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalEditStudent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Edit internship</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="usernameEditStudent" class="control-label">Username:</label>
+                        <input type="text" class="form-control" id="usernameEditStudent">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullnameEditStudent" class="control-label">Fullname:</label>
+                        <input type="text" class="form-control" id="fullnameEditStudent">
+                    </div>
+                    <div class="form-group">
+                        <label for="emaiEditlStudent" class="control-label">Email:</label>
+                        <input type="text" class="form-control" id="emailEditStudent">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeEditStudentModal" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSubmitEditStudent" class="btn btn-success">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/student.js" asp-append-version="true"></script>
+
+

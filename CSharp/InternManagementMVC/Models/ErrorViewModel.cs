@@ -1,6 +1,6 @@
 using System;
 
-namespace InternManagementMVC.Models
+namespace IternManagemenrMVC.Models
 {
     public class ErrorViewModel
     {

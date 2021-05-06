@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using InternManagementAPI.Models;
 using InternManagementAPI.Repository;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InternManagementAPI.Controllers
@@ -15,11 +16,13 @@ namespace InternManagementAPI.Controllers
     public class TScheduleController : ControllerBase
     {
         private readonly ITSheduleRepository _repositorySchedule;
-        public TScheduleController(ITSheduleRepository repositorySchedule)
+        private readonly TrainingContext _db;
+        public TScheduleController(ITSheduleRepository repositorySchedule, TrainingContext db)
         {
             _repositorySchedule = repositorySchedule;
+            _db = db;
         }
-        
+
         [HttpGet]
         [Route("schedules")]
         public IActionResult GetAll()
@@ -28,7 +31,6 @@ namespace InternManagementAPI.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("{id}", Name = "GetScheduleDetail")]
         [HttpGet]
         [Route("scheduleDetail/{id}")]
         public IActionResult GetById(int id)
@@ -40,8 +42,25 @@ namespace InternManagementAPI.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("scheduleUsername/{username}")]
+        public IActionResult GetByUsername(string username)
+        {
+            var result = _repositorySchedule.GetScheduleByUsername(username);
+            //var user = _db.TStudents.Single(s => s.AUsername == username);
+            //List<TSchedule> result = _db.Entry(user).Collection(u => u.TSchedule).Query().ToList();
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost]
-        [Route("addSchedule")]
+        [Route("upsertSchedule")]
         public IActionResult Add([FromBody]TSchedule schedule)
         {
             if (schedule is null)
@@ -52,49 +71,45 @@ namespace InternManagementAPI.Controllers
             {
                 return BadRequest();
             }
-            _repositorySchedule.AddSchedule(schedule);
-
-            return CreatedAtAction("GetById", new { id = schedule.AScheduleId }, schedule);
+            bool checkUpsertSchedule = _repositorySchedule.UpsertSchedule(schedule);
+            if (checkUpsertSchedule)
+            {
+                return CreatedAtAction("GetById", new { id = schedule.AScheduleId }, schedule);
+            }
+            else
+            {
+                return BadRequest();
+            }
             //return CreatedAtRoute("GetScheduleDetail", new { id = schedule.AScheduleId }, schedule);
             //return NoContent();
         }
-        [HttpPut]
+        [HttpPatch]
         [Route("updateSchedule/{id}")]
-        public IActionResult Update(int id, [FromBody]TSchedule schedule)
+        public IActionResult Update(int id, /*[FromBody]JsonPatchDocument<TSchedule> patchSchedule*/ TSchedule schedule)
         {
-            if (id != schedule.AScheduleId)
-            {
-                return BadRequest("Schedule is null");
-            }
+            var entity = _repositorySchedule.GetScheduleById(id);
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            try
+            if (entity == null)
             {
-                _repositorySchedule.UpdateSchedule(schedule);
+                return BadRequest("Schedule is null");
             }
-            catch (DBConcurrencyException)
+            bool checkUpdateSchedule = _repositorySchedule.UpdateSchedule(id, schedule);
+            if (checkUpdateSchedule)
             {
-                if (_repositorySchedule.GetScheduleById(id) == null)
-                {
-                    return NotFound();
-                }
-                throw;
+                return Ok(schedule);
             }
-            return NoContent();
+            return BadRequest();
+            //patchSchedule.ApplyTo(entity, ModelState);
         }
 
         [HttpDelete]
         [Route("deleteSchedule/{id}")]
         public IActionResult Delete(int id)
         {
-            var scheduleDelete = _repositorySchedule.GetScheduleById(id);
-            if (scheduleDelete == null)
-            {
-                return NotFound();
-            }
-            _repositorySchedule.DeleteSchedule(scheduleDelete);
+            _repositorySchedule.DeleteSchedule(id);
             return NoContent();
         }
     }

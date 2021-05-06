@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace InternManagementMVC
+namespace IternManagemenrMVC
 {
     public class Program
     {

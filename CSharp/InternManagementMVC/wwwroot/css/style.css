@@ -1,0 +1,11 @@
+﻿.bold_Text {
+    font-weight: bold;
+}
+
+.h3 {
+    font-size: 1.17em;
+    font-weight: bolder
+}
+.pointerMouse {
+    cursor: pointer;
+}

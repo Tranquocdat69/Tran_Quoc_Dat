@@ -58,7 +58,6 @@ go
 create nonclustered index IX_aSession on tSchedule(aSession)
 go
 
-
 --tạo thủ tục lỗi khi thực thi câu truy vấn
 if exists (select * from sys.objects where type = 'P' and name = 'spErrorExecuteQuery')
 drop procedure spErrorExecuteQuery
@@ -123,10 +122,12 @@ create procedure spScheduleUpdate
 as 
 set nocount on
 begin
-	if ((select COUNT(aScheduleID) from tSchedule where aStudentID = @pStudentID) > 0)
+	if ((select COUNT(aScheduleID) from tSchedule where aStudentID = @pStudentID and aAttendedDate = @pAttendedDate) > 0)
 	 begin
+		declare @pscheduleID int;
+		select @pscheduleID = aScheduleID from tSchedule where aStudentID = @pStudentID and aAttendedDate = @pAttendedDate
 		begin try
-			update tSchedule set aAttendedDate = @pAttendedDate, aSession = @pSession,aUpdateDate = CURRENT_TIMESTAMP where aStudentID = @pStudentID
+			update tSchedule set aAttendedDate = @pAttendedDate, aSession = @pSession,aUpdateDate = CURRENT_TIMESTAMP where aScheduleID = @pscheduleID
 		end try
 		begin catch
 			execute spErrorExecuteQuery
@@ -154,7 +155,7 @@ create procedure spStudentSelect
 @pFullName nvarchar(255) = null
 as
 begin
-	select aStudentID,aUsername,aFullName,aEmail from tStudents where aUsername = @pUsername or aEmail = @pEmail or aFullName = @pFullName
+	select aStudentID,aUsername,aFullName,aEmail,aCreatedDate,aUpdatedDate from tStudents where aUsername = @pUsername or aEmail = @pEmail or aFullName = @pFullName
 end
 go
 
@@ -199,7 +200,7 @@ create procedure spScheduleSelect
 as
 set nocount on
 begin
-	select aScheduleID,schedule.aStudentID,students.aFullName,students.aEmail,aAttendedDate,aSession from tSchedule schedule
+	select aScheduleID,schedule.aStudentID,schedule.aCreatedDate,schedule.aUpdateDate,students.aUsername,students.aFullName,students.aEmail,aAttendedDate,aSession from tSchedule schedule
 	inner join tStudents students on students.aStudentID = schedule.aStudentID and (aUsername = @pUsername or (schedule.aAttendedDate between @pFrom and @pTo) or aSession = @pSession)
 end
 go
@@ -243,7 +244,7 @@ go
 -- @pStudentID int
 -- @pAttendedDate date
 -- @pSession int
-execute spScheduleUpdate 3,'2021-3-17',2
+execute spScheduleUpdate 1,'2021-5-4',1
 go
 select * from tSchedule
 go
@@ -266,12 +267,12 @@ go
 -- @pUsername varchar(100)
 -- @pfrom date, @to date
 -- @paSession int
-execute spScheduleSelect @pSession = 2
+execute spScheduleSelect @pUsername = N'fitthuctap20'
 go
 
 --thực thi thủ tục spScheduleDelete
 -- @pScheduleID int
-execute spScheduleDelete 19
+execute spScheduleDelete 4
 go
-select * from tStudents
+select * from tSchedule
 go

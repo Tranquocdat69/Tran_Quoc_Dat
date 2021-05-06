@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using InternManagementMVC.Models;
+using IternManagemenrMVC.Models;
 
-namespace InternManagementMVC.Controllers
+namespace IternManagemenrMVC.Controllers
 {
     public class HomeController : Controller
     {

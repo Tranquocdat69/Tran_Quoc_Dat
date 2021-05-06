@@ -1,6 +1,7 @@
 ﻿using InternManagementAPI.Models;
 using InternManagementAPI.Repository;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,14 @@ namespace InternManagementAPI.DataManager
         {
            _db = db;
         }
-        public void AddStudent(TStudents entity)
+        public void UpsertStudent(TStudents entity)
         {
-            _db.TStudents.Add(entity);
-            _db.SaveChanges();
+            _db.Database.ExecuteSqlRaw("spStudentUpdate {0},{1},{2}", entity.AUsername, entity.AFullName, entity.AEmail);
         }
 
-        public void DeleteStudent(TStudents entity)
+        public void DeleteStudent(int id)
         {
-            _db.TStudents.Remove(entity);
-            _db.SaveChanges();
+            _db.Database.ExecuteSqlRaw("spStudentDelete {0}", id);
         }
 
         public List<TStudents> GetAllStudents()
@@ -32,15 +31,36 @@ namespace InternManagementAPI.DataManager
             return _db.TStudents.ToList();
         }
 
+        public List<TStudents> GetStudentsByUserNameOrEmailOrFullName(string username, string email, string fullname)
+        {
+            string StoredProc = " exec spStudentSelect "+ "@pUsername = '" + username + "'," + "@pEmail = '" + email + "'," + "@pFullName = N'" + fullname + "'";
+            return _db.TStudents.FromSqlRaw(StoredProc).ToList();
+        }
+
         public TStudents GetStudentById(int id)
         {
             return _db.TStudents.Find(id);
         }
 
-        public void UpdateStudent(TStudents entity)
+        public void UpdateStudent(int id, TStudents entity)
         {
-            _db.TStudents.Update(entity);
-            _db.SaveChanges();
+            //var local = _db.Set<TStudents>().Local.FirstOrDefault(entry => entry.AStudentId.Equals(id));
+            //// check if local is not null 
+            //if (local != null)
+            //{
+            //    // detach
+            //    _db.Entry(local).State = EntityState.Detached;
+            //}
+            //_db.Entry(entity).State = EntityState.Modified;
+            var updateEntity = _db.TStudents.Where(u=>u.AStudentId == id).FirstOrDefault<TStudents>();
+            if (updateEntity != null)
+            {
+                updateEntity.AUsername = entity.AUsername;
+                updateEntity.AFullName = entity.AFullName;
+                updateEntity.AEmail = entity.AEmail;
+                _db.SaveChanges();
+            }
+            //_db.TStudents.Update(updateEntity);
         }
     }
 }

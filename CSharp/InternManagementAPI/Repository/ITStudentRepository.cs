@@ -9,10 +9,11 @@ namespace InternManagementAPI.Repository
     public interface ITStudentRepository
     {
         List<TStudents> GetAllStudents();
+        List<TStudents> GetStudentsByUserNameOrEmailOrFullName(string username, string email, string fullname);
         TStudents GetStudentById(int id);
-        void AddStudent(TStudents entity);
-        void UpdateStudent(TStudents entity);
-        void DeleteStudent(TStudents entity);
+        void UpsertStudent(TStudents entity);
+        void UpdateStudent(int id, TStudents entity);
+        void DeleteStudent(int id);
     }
 
 }

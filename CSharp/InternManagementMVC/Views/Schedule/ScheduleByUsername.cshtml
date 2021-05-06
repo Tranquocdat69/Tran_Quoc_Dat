@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewData["Title"] = "ScheduleByUsername";
+}
+
+<div id="scheduleIndex" class="container">
+    <center>
+        <table class="table" style="width: 40%">
+            <tr>
+                <td>Username: </td>
+                <td id="usernameFromController">@ViewBag.username</td>
+            </tr>
+            <tr>
+                <td>Fullname: </td>
+                <td id="fullnameUser"></td>
+            </tr>
+        </table>
+    </center>
+</div>
+<div class="modal fade" id="modalCreateSchedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add new Schedule</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="usernameStudent" class="control-label">Attended Date:</label>
+                        <input type="date" onkeydown="return false" class="form-control" id="attendedDateSchedule">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullnameStudent" class="control-label">Session:</label>
+                        <div class="radio">
+                            <label><input type="radio" name="sessionSchedule" value="0">Không đi</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" id="checkedSessionSchedule" name="sessionSchedule" value="1" checked>Sáng</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" name="sessionSchedule" value="2">Chiều</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" name="sessionSchedule" value="3">Cả ngày</label>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="resetForm()" id="closeCreateScheduleModal" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSubmitAddSchedule" class="btn btn-success">Add New</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditSchedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Edit Schedule</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="usernameStudent" class="control-label">Attended Date:</label>
+                        <input type="date" onkeydown="return false" class="form-control" id="attendedDateEditSchedule">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullnameStudent" class="control-label">Session:</label>
+                        <div class="radio">
+                            <label><input type="radio" name="sessionEditSchedule" value="0" id="absent">Không đi</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" name="sessionEditSchedule" value="1" id="morning">Sáng</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" name="sessionEditSchedule" value="2" id="afternoon">Chiều</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" name="sessionEditSchedule" value="3" id="allDay">Cả ngày</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeEditScheduleModal" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSubmitEditSchedule" class="btn btn-success">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/schedule.js" asp-append-version="true"></script>
+
+

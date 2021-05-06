@@ -31,11 +31,11 @@ namespace InternManagementAPI
         {
             services.AddCors(option => option.AddPolicy("IternManagementAPIPolicy", builder => {
                 builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-
             }));
             services.AddDbContext<TrainingContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TrainingDB")));
             services.AddScoped<ITStudentRepository, TStudentRepository>();
             services.AddScoped<ITSheduleRepository, TScheduleRepository>();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddControllers();
         }
 

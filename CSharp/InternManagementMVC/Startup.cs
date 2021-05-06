@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace InternManagementMVC
+namespace IternManagemenrMVC
 {
     public class Startup
     {
@@ -23,7 +23,6 @@ namespace InternManagementMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClient("IternAPI", c => c.BaseAddress = new Uri("https://localhost:44333/api/"));
             services.AddControllersWithViews();
         }
 
@@ -51,7 +50,10 @@ namespace InternManagementMVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=TStudent}/{action=Index}/{id?}");
+                    pattern: "{controller=Student}/{action=Index}/{id?}"
+                    //defaults: new { controller = "Student", action = "Index" }
+                    );
+
             });
         }
     }

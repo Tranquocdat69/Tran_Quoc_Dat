@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using InternManagementAPI.Models;
 using InternManagementAPI.Repository;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace InternManagementAPI.Controllers
@@ -42,10 +44,10 @@ namespace InternManagementAPI.Controllers
         }
 
         [HttpGet]
-        [Route("studentDetail/{id}")]
-        public IActionResult GetById(int id)
+        [Route("studentFilter")]
+        public IActionResult GetStudentsFilter(string username = null,string email = null, string fullname = null)
         {
-            var result = _repositoryStudent.GetStudentById(id);
+            var result = _repositoryStudent.GetStudentsByUserNameOrEmailOrFullName(username, email, fullname);
             if (result == null)
             {
                 return NotFound();
@@ -53,39 +55,27 @@ namespace InternManagementAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("updateStudent/{id}")]
-        public IActionResult Update(int id, [FromBody]TStudents student)
+        public IActionResult PartialUpdate(int id, /*[FromBody]JsonPatchDocument<TStudents> patchStudent*/ [FromBody]TStudents student)
         {
+            var entity = _repositoryStudent.GetStudentById(id);
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            if (id != student.AStudentId)
+            if (entity == null)
             {
                 return BadRequest("Student is null");
             }
-            try
-            {
-                _repositoryStudent.UpdateStudent(student);
-            }
-            catch (DBConcurrencyException)
-            {
-                if (_repositoryStudent.GetStudentById(id) == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }  
-            }
-            return NoContent();
+            //patchStudent.ApplyTo(entity, ModelState);
+            _repositoryStudent.UpdateStudent(id, student);
+            return Ok(student);
         }
 
         [HttpPost]
-        [Route("addStudent")]
-        public IActionResult Add([FromBody]TStudents student)
+        [Route("upsertStudent")]
+        public IActionResult Upsert([FromBody]TStudents student)
         {
             if (student is null)
             {
@@ -95,20 +85,15 @@ namespace InternManagementAPI.Controllers
             {
                 return BadRequest();
             }
-            _repositoryStudent.AddStudent(student);
-            return NoContent();
+            _repositoryStudent.UpsertStudent(student);
+            return Ok(student);
         }
 
         [HttpDelete]
         [Route("deleteStudent/{id}")]
         public IActionResult Delete(int id)
         {
-            var studentDelete = _repositoryStudent.GetStudentById(id);
-            if (studentDelete == null)
-            {
-                return NotFound("Student couldn't be found");
-            }
-            _repositoryStudent.DeleteStudent(studentDelete);
+            _repositoryStudent.DeleteStudent(id);
             return NoContent();
         }
 
