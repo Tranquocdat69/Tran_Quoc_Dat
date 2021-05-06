@@ -1,6 +1,4 @@
-﻿var APIUrl = "http://localhost:5000/api";
-
-function start() {
+﻿function start() {
     getStudents(renderStudent);
     handleFormCreateStudent();
 };

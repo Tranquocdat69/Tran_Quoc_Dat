@@ -1,5 +1,4 @@
-﻿var APIUrl = "http://localhost:5000/api";
-var username = document.getElementById("usernameFromController").innerText;
+﻿var username = document.getElementById("usernameFromController").innerText;
 var userId;
 
 function start() {
