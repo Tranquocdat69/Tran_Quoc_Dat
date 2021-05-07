@@ -36,7 +36,7 @@ namespace InternManagementAPI.DataManager
 
         public List<TSchedule> GetAllSchedules()
         {
-            return _db.TSchedules.ToList();
+            return _db.TSchedules.OrderByDescending(s=>s.ACreatedDate).ToList();
         }
 
         public TSchedule GetScheduleById(int id)
@@ -81,7 +81,7 @@ namespace InternManagementAPI.DataManager
                 list.Add(schedule);
             }
 
-            return list;
+            return list.OrderByDescending(s=>s.ACreatedDate).ToList();
         }
     }
 }

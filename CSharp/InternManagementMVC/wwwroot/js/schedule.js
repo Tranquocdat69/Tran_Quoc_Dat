@@ -1,10 +1,22 @@
-﻿var username = document.getElementById("usernameFromController").innerText;
-var userId;
+﻿let username = document.getElementById("usernameFromController").innerText;
+let userId;
+let currentPageSchedule = 1;
+let rowPerPageSchedule = 10;
 
 function start() {
     getSCheduleByUsername(username, renderSchedule);
     getUserDetail(username);
     handleFormCreateSchedule();
+}
+
+function changePageSchedule(indexPage) {
+    let pageSelection = document.getElementById("selectPageNumberSchedule");
+    if (pageSelection !== null) {
+        pageSelection.onchange = function () {
+            currentPageSchedule = pageSelection.value;
+            getSCheduleByUsername(username, renderSchedule);
+        }
+    }
 }
 
 //nếu mà schedule trống 
@@ -40,21 +52,21 @@ var keyObject = [
 
 function renderSchedule(schedules) {
     if (schedules.length >= 0) {
-        var deleteTable = document.getElementById("tableSchedules");
+        let deleteTable = document.getElementById("tableSchedules");
         if (deleteTable) {
             deleteTable.remove();
         }
-        var createTable = document.createElement("table");
+        let createTable = document.createElement("table");
         createTable.setAttribute("id", "tableSchedules");
         createTable.classList.add("table");
         document.getElementById("scheduleIndex").appendChild(createTable);
-        var tableSchedules = document.getElementById("tableSchedules");
-        var header = tableSchedules.createTHead();
-        var body = tableSchedules.createTBody();
-        var rowHeader = document.createElement("tr");
+        let tableSchedules = document.getElementById("tableSchedules");
+        let header = tableSchedules.createTHead();
+        let body = tableSchedules.createTBody();
+        let rowHeader = document.createElement("tr");
         titleHeader.forEach(data => {
-            var td = document.createElement("td");
-            var value = document.createTextNode(data);
+            let td = document.createElement("td");
+            let value = document.createTextNode(data);
             if (data === "Action") {
                 td.colSpan = 2;
             }
@@ -64,22 +76,25 @@ function renderSchedule(schedules) {
             header.appendChild(rowHeader);
         });
 
-        var index = 1;
+        let index = 1;
 
-        for (var i = 0; i < schedules.length; i++) {
-            var tr = document.createElement("tr");
+        for (let i = (currentPageSchedule - 1) * rowPerPageSchedule; i < currentPageSchedule * rowPerPageSchedule; i++) {
+            if (schedules[i] === undefined) {
+                continue;
+            }
+            let tr = document.createElement("tr");
             tr.setAttribute("id", "row_" + schedules[i]["aScheduleId"]);
-            var tdFirst = document.createElement("td");
+            let tdFirst = document.createElement("td");
             tdFirst.innerText = index;
             tr.appendChild(tdFirst);
-            for (var j = 0; j < keyObject.length; j++) {
-                var td = document.createElement("td");
-                var value = document.createTextNode(schedules[i][keyObject[j]]);
+            for (let j = 0; j < keyObject.length; j++) {
+                let td = document.createElement("td");
+                let value = document.createTextNode(schedules[i][keyObject[j]]);
                 if (keyObject[j] === "aAttendedDate") {
-                    var date = document.createTextNode(formatDate(schedules[i][keyObject[j]]));
+                    let date = document.createTextNode(formatDate(schedules[i][keyObject[j]]));
                     td.appendChild(date);
                 } else if (keyObject[j] === "aSession") {
-                    var string;
+                    let string;
                     if (schedules[i][keyObject[j]] === 0) {
                         string = document.createTextNode("Không đi");
                         td.appendChild(string);
@@ -102,9 +117,9 @@ function renderSchedule(schedules) {
                 tr.appendChild(td);
             }
 
-            var tdEdit = document.createElement("td");
-            var buttonEdit = document.createElement("a");
-            var valueEdit = document.createTextNode("Edit");
+            let tdEdit = document.createElement("td");
+            let buttonEdit = document.createElement("a");
+            let valueEdit = document.createTextNode("Edit");
             buttonEdit.classList.add("btn", "btn-success", "text-white", "pointerMouse");
             buttonEdit.setAttribute("onclick", "handleFormEditSchedule(" + schedules[i]['aScheduleId'] + ")");
             buttonEdit.setAttribute("data-toggle", "modal");
@@ -112,9 +127,9 @@ function renderSchedule(schedules) {
             buttonEdit.appendChild(valueEdit);
             tdEdit.appendChild(buttonEdit);
 
-            var tdDelete = document.createElement("td");
-            var buttonDelete = document.createElement("a");
-            var valueDelete = document.createTextNode("Delete");
+            let tdDelete = document.createElement("td");
+            let buttonDelete = document.createElement("a");
+            let valueDelete = document.createTextNode("Delete");
             buttonDelete.classList.add("btn", "btn-danger", "pointerMouse", "text-white");
             buttonDelete.setAttribute("onclick", "handleDeleteSchedule(" + schedules[i]['aScheduleId'] + ")");
             buttonDelete.appendChild(valueDelete);
@@ -127,21 +142,62 @@ function renderSchedule(schedules) {
         }
     }
 
-    var deleteButtonAddSchedule = document.getElementById("buttonAddSchedule");
+    let deleteButtonAddSchedule = document.getElementById("buttonAddSchedule");
     if (deleteButtonAddSchedule) {
         deleteButtonAddSchedule.remove();
     }
-    var buttonAddNewSchedule = document.createElement("button");
+
+    let deleteSelection = document.getElementById("selectPageNumberSchedule");
+    if (deleteSelection) {
+        deleteSelection.remove();
+    }
+
+    let deleteDiv = document.getElementById("buttonAndSelectSchedule");
+    if (deleteDiv) {
+        deleteDiv.remove();
+    }
+
+    let createDiv = document.createElement("div");
+    createDiv.setAttribute("id", "buttonAndSelectSchedule");
+    document.getElementById("scheduleIndex").appendChild(createDiv);
+    let divButtonSelect = document.getElementById("buttonAndSelectSchedule");
+    divButtonSelect.style.display = "flex";
+    divButtonSelect.style.justifyContent = "space-between";
+
+    let buttonAddNewSchedule = document.createElement("button");
     buttonAddNewSchedule.setAttribute("id", "buttonAddSchedule");
     buttonAddNewSchedule.classList.add("btn", "btn-primary");
     buttonAddNewSchedule.setAttribute("data-toggle", "modal");
     buttonAddNewSchedule.setAttribute("data-target", "#modalCreateSchedule");
     buttonAddNewSchedule.innerText = "New Row";
-    document.getElementById("scheduleIndex").appendChild(buttonAddNewSchedule);
+    createDiv.appendChild(buttonAddNewSchedule);
+
+    if (schedules.length > 0) {
+        let createSelection = document.createElement("select");
+        createSelection.setAttribute("id", "selectPageNumberSchedule");
+        for (var i = 1; i <= Math.ceil(schedules.length / rowPerPageSchedule); i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.text = "page " + i;
+            option.setAttribute("id", "pageSchedule_" + i);
+            createSelection.appendChild(option);
+        }
+        divButtonSelect.appendChild(createSelection);
+    }
+
+    if (document.getElementById("pageSchedule_" + currentPageSchedule) !== null) {
+        document.getElementById("pageSchedule_" + currentPageSchedule).setAttribute("selected", true)
+    } else {
+        if (schedules.length > 0) {
+            currentPageSchedule = currentPageSchedule - 1;
+            getSCheduleByUsername(username, renderSchedule);
+        }
+    }
+    changePageSchedule(currentPageSchedule);
 }
 
 function createSchedule(data, callback) {
-    var options = {
+    let options = {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -153,6 +209,7 @@ function createSchedule(data, callback) {
             if (response.status == 400) {
                 alert("Ngày tháng năm đã tồn tại");
             } else {
+                currentPageSchedule = 1;
                 return response.json();
             }
         })
@@ -167,8 +224,6 @@ function handleFormCreateSchedule() {
         let attendedDate = document.querySelector("#attendedDateSchedule").value;
         let session = document.querySelector("input[name='sessionSchedule']:checked").value;
         let check = false;
-        console.log(sesionTable.length);
-
         if (attendedDate == "") {
             document.querySelector("#attendedDateSchedule").focus();
             alert("Vui lòng chọn ngày tháng năm");
@@ -203,13 +258,13 @@ function handleFormCreateSchedule() {
 }
 
 function handleDeleteSchedule(id) {
-    var options = {
+    let options = {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
         }
     };
-    var result = confirm("Want to delete?");
+    let result = confirm("Bạn chắc chắn muốn xóa?");
     if (result) {
         fetch(APIUrl + "/tschedule/deleteSchedule/" + id, options)
             .then(function () {
@@ -219,7 +274,7 @@ function handleDeleteSchedule(id) {
 }
 
 function editSchedule(id, data, callback) {
-    var options = {
+    let options = {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -302,7 +357,7 @@ function resetForm() {
 }
 
 function formatDate(date) {
-    var d = new Date(date),
+    let d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();

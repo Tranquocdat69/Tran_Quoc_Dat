@@ -1,7 +1,20 @@
-﻿function start() {
+﻿let currentPageStudent = 1;
+let rowPerPageStudent = 10;
+
+function start() {
     getStudents(renderStudent);
     handleFormCreateStudent();
 };
+
+function changePageStudent(indexPage) {
+    let pageSelection = document.getElementById("selectPageNumberStudent");
+    if (pageSelection !== null) {
+        pageSelection.onchange = function () {
+            currentPageStudent = pageSelection.value;
+            getStudents(renderStudent);
+        }
+    }
+}
 
 function getStudents(callback) {
     fetch(APIUrl + "/tstudent/students")
@@ -21,6 +34,7 @@ function createStudent(data, callback) {
     };
     fetch(APIUrl + "/tstudent/upsertStudent", options)
         .then(function (response) {
+            currentPageStudent = 1;
             return response.json();
         })
         .then(callback);
@@ -59,6 +73,7 @@ var keyObject = [
 
 
 function renderStudent(students) {
+
     if (students.length >= 0) {
         let deleteTable = document.getElementById("tableStudents");
         if (deleteTable) {
@@ -84,7 +99,10 @@ function renderStudent(students) {
             header.appendChild(rowHeader);
         });
         let index = 1;
-        for (let i = 0; i < students.length; i++) {
+        for (let i = (currentPageStudent - 1) * rowPerPageStudent; i < currentPageStudent * rowPerPageStudent; i++) {
+            if (students[i] === undefined) {
+                continue;
+            }
             let tr = document.createElement("tr");
             tr.setAttribute("id", "row_" + students[i]["aStudentId"]);
             let tdFirst = document.createElement("td");
@@ -127,17 +145,59 @@ function renderStudent(students) {
             index++;
         }
     }
+
     let deleteButtonAddStudent = document.getElementById("buttonAddStudent");
     if (deleteButtonAddStudent) {
         deleteButtonAddStudent.remove();
     }
+
+    let deleteSelection = document.getElementById("selectPageNumberStudent");
+    if (deleteSelection) {
+        deleteSelection.remove();
+    }
+
+    let deleteDiv = document.getElementById("buttonAndSelectStudent");
+    if (deleteDiv) {
+        deleteDiv.remove();
+    }
+
+    let createDiv = document.createElement("div");
+    createDiv.setAttribute("id", "buttonAndSelectStudent");
+    document.getElementById("studentIndex").appendChild(createDiv);
+    let divButtonSelect = document.getElementById("buttonAndSelectStudent");
+    divButtonSelect.style.display = "flex";
+    divButtonSelect.style.justifyContent = "space-between";
+
     let buttonAddNewStudent = document.createElement("button");
     buttonAddNewStudent.setAttribute("id", "buttonAddStudent");
     buttonAddNewStudent.classList.add("btn", "btn-primary");
     buttonAddNewStudent.setAttribute("data-toggle", "modal");
     buttonAddNewStudent.setAttribute("data-target", "#modalCreateStudent");
     buttonAddNewStudent.innerText = "New Row";
-    document.getElementById("studentIndex").appendChild(buttonAddNewStudent);
+    divButtonSelect.appendChild(buttonAddNewStudent);
+
+    if (students.length > 0) {
+        let createSelection = document.createElement("select");
+        createSelection.setAttribute("id", "selectPageNumberStudent");
+        for (var i = 1; i <= Math.ceil(students.length / rowPerPageStudent); i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.text = "page " + i;
+            option.setAttribute("id", "pageStudent_" + i);
+            createSelection.appendChild(option);
+        }
+        divButtonSelect.appendChild(createSelection);
+    }
+
+    if (document.getElementById("pageStudent_" + currentPageStudent) !== null) {
+        document.getElementById("pageStudent_" + currentPageStudent).setAttribute("selected", true)
+    } else {
+        if (students.length > 0) {
+            currentPageStudent = currentPageStudent - 1;
+            getStudents(renderStudent);
+        }
+    }
+    changePageStudent(currentPageStudent);
 
 }
 
@@ -279,7 +339,7 @@ function handleDeleteStudent(id) {
         }
     };
     let username = document.getElementById("row_" + id).cells[1].innerText;
-    let result = confirm("Want to delete?");
+    let result = confirm("Bạn chắc chắn muốn xóa?");
     let check = false;
     if (result) {
         fetch(APIUrl + "/tschedule/scheduleUsername/" + username)

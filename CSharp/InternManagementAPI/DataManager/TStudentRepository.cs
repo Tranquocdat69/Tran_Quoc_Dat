@@ -28,7 +28,7 @@ namespace InternManagementAPI.DataManager
 
         public List<TStudents> GetAllStudents()
         {
-            return _db.TStudents.ToList();
+            return _db.TStudents.OrderByDescending(s=>s.ACreatedDate).ToList();
         }
 
         public List<TStudents> GetStudentsByUserNameOrEmailOrFullName(string username, string email, string fullname)
